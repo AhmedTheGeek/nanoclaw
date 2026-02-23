@@ -260,7 +260,7 @@ Present discovered repositories:
 ```
 Found 2 Git repositories:
 
-├── obsidian-vault/ (GitHub: AhmedTheGeek/obsidian-vault, 245 commits)
+├── notes-vault/ (GitHub: user/notes-vault, 245 commits)
 └── daily-notes/ (No remote, 147 markdown files, 2.3MB)
 
 How should we migrate these?
@@ -392,7 +392,7 @@ fi
 git clone $REMOTE_URL ~/.claude/$REPO_NAME
 
 # Verify key files
-# For obsidian: Check for Todo.md or daily notes
+# For knowledge bases: Check for key files (README, index, daily notes)
 # For general repos: Just confirm .git exists
 ```
 
@@ -460,8 +460,7 @@ $DATE
 - Notion helpers: ~/.claude/notion-helpers/ (2 scripts)
 
 ## Repositories
-- Obsidian vault: ~/.claude/obsidian-vault/ (cloned from GitHub)
-- Todo file: ~/.claude/obsidian-vault/AM/👨💻 Todo.md
+- Knowledge base: ~/.claude/notes-vault/ (cloned from GitHub)
 
 ## Scheduled Tasks
 - PR checker: Every 30 min (task ID: abc-123, context_mode: group)
@@ -473,7 +472,7 @@ $DATE
 ## Old Paths → New Paths
 - /root/.clawdbot/secrets/ → ~/.claude/secrets/
 - /root/clawd/jira-templates/ → ~/.claude/jira-templates/
-- /root/clawd/obsidian-vault/ → ~/.claude/obsidian-vault/
+- /root/clawd/notes-vault/ → ~/.claude/notes-vault/
 ```
 
 ## Phase 4: Verification & Report
@@ -491,10 +490,11 @@ Run tests on each migrated component:
 **Repositories:**
 ```bash
 # Verify key files exist
-test -f ~/.claude/obsidian-vault/AM/👨💻\ Todo.md && echo "✅ Todo file found"
+# Verify key files exist (adjust based on repo type)
+test -f ~/.claude/notes-vault/README.md && echo "✅ Key files found"
 
 # Check git remote
-cd ~/.claude/obsidian-vault && git remote -v
+cd ~/.claude/notes-vault && git remote -v
 ```
 
 **Scheduled tasks:**
@@ -524,7 +524,7 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 ✅ Successfully Migrated:
 - 3 credentials (Jira, Notion, GitHub)
 - 2 template directories
-- 1 repository (obsidian-vault)
+- 1 repository (notes-vault)
 - 2 scheduled tasks
 - 1 skill
 
@@ -548,7 +548,7 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 - Organization: Geekology FZ - LLC
 
 ### ✅ GitHub
-- Status: gh CLI authenticated as AhmedTheGeek
+- Status: gh CLI authenticated successfully
 - Scopes: repo, read:org, workflow
 
 ### ⚠️ OpenAI API
@@ -568,10 +568,10 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 
 ## Repositories
 
-### obsidian-vault
-- Location: ~/.claude/obsidian-vault/
-- Source: Cloned from git@github.com:AhmedTheGeek/obsidian-vault.git
-- Todo file: ~/.claude/obsidian-vault/AM/👨💻 Todo.md ✅
+### notes-vault
+- Location: ~/.claude/notes-vault/
+- Source: Cloned from git@github.com:user/notes-vault.git
+- Key files verified ✅
 
 ## Scheduled Tasks
 
@@ -639,7 +639,7 @@ rm -rf ~/.claude/secrets/
 rm -rf ~/.claude/jira-templates/ ~/.claude/notion-helpers/
 
 # Remove migrated repos
-rm -rf ~/.claude/obsidian-vault/
+rm -rf ~/.claude/notes-vault/
 
 # Cancel scheduled tasks
 cancel_task abc-123
@@ -665,7 +665,7 @@ Show concise summary:
 Migrated successfully:
 ✅ 3 credentials (all tested, working)
 ✅ 2 template directories
-✅ 1 repository (obsidian-vault from GitHub)
+✅ 1 repository (notes-vault from GitHub)
 ✅ 2 active scheduled tasks
 ✅ 1 skill
 
