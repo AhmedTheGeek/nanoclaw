@@ -213,7 +213,7 @@ Present discovered credentials grouped by confidence:
 Found 5 credential files:
 
 High Confidence (tested on migration):
-├── Jira - awesomemotive.atlassian.net
+├── Jira - company.atlassian.net
 ├── Notion Books - OAuth credentials
 └── GitHub - Personal Access Token
 
@@ -539,13 +539,13 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 
 ### ✅ Jira
 - Location: ~/.claude/secrets/jira.json
-- Status: Tested successfully, connected as Ahmed Hussein
-- URL: awesomemotive.atlassian.net
+- Status: Tested successfully, connection verified
+- URL: company.atlassian.net
 
 ### ✅ Notion Books
 - Location: ~/.claude/secrets/notion.json
 - Status: Tested successfully, OAuth tokens valid
-- Organization: Geekology FZ - LLC
+- Organization: Company Name
 
 ### ✅ GitHub
 - Status: gh CLI authenticated successfully
