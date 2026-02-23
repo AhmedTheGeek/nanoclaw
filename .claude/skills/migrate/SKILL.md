@@ -60,8 +60,9 @@ For each file found, use the `Read` tool to parse and categorize:
 
 ```
 File contains "atlassian.net" in url field → Jira (high confidence, testable)
-File contains "zohoapis.com" or "zoho.com" → Zoho (high confidence, testable)
 File has token starting with "ghp_" or "github_pat_" → GitHub PAT (high confidence, testable)
+File contains "slack.com" API endpoint → Slack (high confidence, testable)
+File contains "api.openai.com" or "OPENAI_API_KEY" → OpenAI (medium confidence, testable)
 File has "client_id" + "refresh_token" → OAuth service (medium confidence, not testable)
 File has keys matching "token|key|secret|password" → Unknown credential (low confidence, not testable)
 ```
@@ -79,11 +80,11 @@ Build an inventory:
       "keys": ["url", "email", "token", "project"]
     },
     {
-      "path": "/root/.clawdbot/secrets/zoho.json",
-      "service": "Zoho Books",
+      "path": "/root/.clawdbot/secrets/slack.json",
+      "service": "Slack",
       "confidence": "high",
       "testable": true,
-      "keys": ["client_id", "refresh_token", "api_domain"]
+      "keys": ["token", "team_id", "webhook_url"]
     }
   ]
 }
@@ -112,7 +113,7 @@ head -20 $DIR/$(ls $DIR | head -1)
 
 Categorize by naming patterns:
 - `jira-*` → Jira templates
-- `zoho-*` → Zoho helpers
+- `notion-*` → Notion helpers
 - `notion-*` → Notion templates
 - Generic → Unknown helpers
 
@@ -213,7 +214,7 @@ Found 5 credential files:
 
 High Confidence (tested on migration):
 ├── Jira - awesomemotive.atlassian.net
-├── Zoho Books - OAuth credentials
+├── Notion Books - OAuth credentials
 └── GitHub - Personal Access Token
 
 Medium Confidence (OAuth-like, not testable):
@@ -241,7 +242,7 @@ Present discovered directories:
 Found 3 template/helper directories:
 
 ├── jira-templates/ (4 files: bug.md, task.md, story.md, naming-convention.md)
-├── zoho-helpers/ (2 scripts: zoho-books.sh, zoho-record.py)
+├── notion-helpers/ (2 scripts: notion-books.sh, notion-record.py)
 └── notion-templates/ (5 markdown files)
 
 Which would you like to migrate?
@@ -279,7 +280,7 @@ Found 4 scheduled jobs:
 
 ├── Every 30 min - "Check for new PRs assigned to me" (cron)
 ├── Daily 9am - "Daily standup summary" (cron)
-├── Monthly 1st - "Zoho Books reminder" (cron)
+├── Monthly 1st - "Notion Books reminder" (cron)
 └── One-time - "Review WPChat PR" (already past due, paused)
 
 For each job that runs:
@@ -321,7 +322,7 @@ mkdir -p ~/.claude/secrets
 chmod 700 ~/.claude/secrets
 
 # Determine service name (lowercase, hyphenated)
-# jira.json, zoho-books.json, github.json, openai.json, unknown-1.json
+# jira.json, notion-books.json, github.json, openai.json, unknown-1.json
 
 # Copy file
 cp $SOURCE_FILE ~/.claude/secrets/$SERVICE_NAME.json
@@ -339,10 +340,10 @@ curl -s -u "$(jq -r .email ~/.claude/secrets/jira.json):$(jq -r .token ~/.claude
 export GITHUB_TOKEN=$(jq -r .token ~/.claude/secrets/github.json)
 gh auth status
 
-# Zoho (OAuth - test with simple API call)
-ACCESS_TOKEN=$(jq -r .access_token ~/.claude/secrets/zoho.json)
-curl -s -H "Authorization: Zoho-oauthtoken $ACCESS_TOKEN" \
-  "https://www.zohoapis.com/books/v3/settings/preferences?organization_id=..." | jq -r .message
+# Notion (OAuth - test with simple API call)
+ACCESS_TOKEN=$(jq -r .access_token ~/.claude/secrets/notion.json)
+curl -s -H "Authorization: Notion-oauthtoken $ACCESS_TOKEN" \
+  "https://www.notionapis.com/books/v3/settings/preferences?organization_id=..." | jq -r .message
 ```
 
 Record result:
@@ -357,7 +358,7 @@ For each selected directory:
 ```bash
 # Determine category from directory name
 # jira-templates → ~/.claude/jira-templates
-# zoho-helpers → ~/.claude/zoho-helpers
+# notion-helpers → ~/.claude/notion-helpers
 # Generic fallback → ~/.claude/<dirname>
 
 # Copy directory
@@ -451,12 +452,12 @@ $DATE
 
 ## Credentials
 - Jira: ~/.claude/secrets/jira.json ✅
-- Zoho: ~/.claude/secrets/zoho.json ✅
+- Notion: ~/.claude/secrets/notion.json ✅
 - GitHub: gh CLI authenticated ✅
 
 ## Templates & Helpers
 - Jira templates: ~/.claude/jira-templates/ (4 files)
-- Zoho helpers: ~/.claude/zoho-helpers/ (2 scripts)
+- Notion helpers: ~/.claude/notion-helpers/ (2 scripts)
 
 ## Repositories
 - Obsidian vault: ~/.claude/obsidian-vault/ (cloned from GitHub)
@@ -521,7 +522,7 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 ## Summary
 
 ✅ Successfully Migrated:
-- 3 credentials (Jira, Zoho, GitHub)
+- 3 credentials (Jira, Notion, GitHub)
 - 2 template directories
 - 1 repository (obsidian-vault)
 - 2 scheduled tasks
@@ -541,8 +542,8 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 - Status: Tested successfully, connected as Ahmed Hussein
 - URL: awesomemotive.atlassian.net
 
-### ✅ Zoho Books
-- Location: ~/.claude/secrets/zoho.json
+### ✅ Notion Books
+- Location: ~/.claude/secrets/notion.json
 - Status: Tested successfully, OAuth tokens valid
 - Organization: Geekology FZ - LLC
 
@@ -561,9 +562,9 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 - Files: bug.md, task.md, story.md, naming-convention.md
 - Transformed paths: /root/clawd → ~/.claude
 
-### zoho-helpers/
-- Location: ~/.claude/zoho-helpers/
-- Files: zoho-books.sh, zoho-record.py (made executable)
+### notion-helpers/
+- Location: ~/.claude/notion-helpers/
+- Files: notion-books.sh, notion-record.py (made executable)
 
 ## Repositories
 
@@ -586,7 +587,7 @@ Migrated from: $SOURCE_TYPE at $SOURCE_PATH
 - Task ID: def-456
 - Status: Active
 
-### Monthly Zoho Reminder
+### Monthly Notion Reminder
 - Schedule: 1st of month at 7am (cron: 0 7 1 * *)
 - Context: isolated
 - Task ID: ghi-789
@@ -635,7 +636,7 @@ If you need to revert:
 rm -rf ~/.claude/secrets/
 
 # Remove migrated templates
-rm -rf ~/.claude/jira-templates/ ~/.claude/zoho-helpers/
+rm -rf ~/.claude/jira-templates/ ~/.claude/notion-helpers/
 
 # Remove migrated repos
 rm -rf ~/.claude/obsidian-vault/

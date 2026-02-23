@@ -5,7 +5,7 @@ Intelligently migrate from previous AI assistant installations (clawdbot, OpenCl
 ## Features
 
 - **🔍 Smart Discovery**: Scans source installation to find credentials, templates, repositories, and scheduled jobs
-- **🎯 Pattern Recognition**: Identifies services by content (Jira, Zoho, GitHub, etc.) without hardcoded lists
+- **🎯 Pattern Recognition**: Identifies services by content (Jira, GitHub, Slack, etc.) without hardcoded lists
 - **✅ Selective Migration**: User chooses exactly what to migrate
 - **🧪 Validation**: Tests credentials where possible
 - **📊 Comprehensive Reporting**: Detailed migration report with rollback instructions
@@ -28,12 +28,12 @@ The skill will:
 ## What Gets Migrated
 
 ### Credentials
-- Auto-detects: Jira, Zoho, GitHub, and generic OAuth/API keys
+- Auto-detects: Jira, GitHub, Slack, and generic OAuth/API keys
 - Tests connections where possible
 - Stores in `~/.claude/secrets/`
 
 ### Templates & Helpers
-- Jira templates, Zoho scripts, custom helpers
+- Jira templates, Notion scripts, custom helpers
 - Transforms hardcoded paths
 - Makes scripts executable
 - Stores in `~/.claude/<category>/`
@@ -74,7 +74,7 @@ Found clawdbot at: /root/clawd/
 
 📦 Migrating...
   ✅ Jira → ~/.claude/secrets/jira.json (tested, connected)
-  ✅ Zoho → ~/.claude/secrets/zoho.json (tested, connected)
+  ✅ GitHub → ~/.claude/secrets/github.json (tested, connected)
   ✅ jira-templates → ~/.claude/jira-templates/ (4 files)
   ✅ obsidian-vault → cloned from GitHub
   ✅ PR checker → scheduled every 30 min
